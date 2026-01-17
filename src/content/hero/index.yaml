@@ -1,13 +1,13 @@
-name: 🌻 Bloomfolio
-title: Astro Portfolio Template built with 🌼 DaisyUI
+name: Lauro Guedes
+title: About page built with 🌻 Bloomfolio
 description: >-
-  A modern, responsive, and customizable portfolio template built with Astro and
-  DaisyUI. Perfect for developers, designers, and creatives to showcase their
-  work and skills.
+  I'm a 🇧🇷 Brazilian Software Engineer currently based in Malta. I specialize
+  in PHP, Laravel, Vue JS, and TypeScript, and I'm passionate about building
+  beautiful, functional web experiences.
 avatar: '@assets/hero/avatar.png'
-location: 🇧🇷 Brazil
+location: 🇲🇹 Malta
 socialLinks:
-  - url: mailto:hello@example.com
+  - url: mailto:me@lauroguedes.dev
     icon: Email
     label: Email
   - url: https://github.com/lauroguedes

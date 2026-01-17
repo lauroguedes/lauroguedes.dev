@@ -1,22 +1,20 @@
-enableThemeSelector: true
+enableThemeSelector: false
 extraLinksEnabled: true
 extraLinks:
+  - link: >-
+      https://docs.google.com/document/d/1MB3sewehWDdBgIetYyZMu2s-A3zq0NxF4ruamyhES6I/edit?usp=sharing
+    icon: FileText
+    label: My CV
+  - link: https://github.com/lauroguedes/lauroguedes.dev
+    icon: CodeXml
+    label: Clone this Repo
   - link: /blog/guides/bloomfolio-complete-guide-building-your-portfolio
     icon: Flower2
     label: Bloomfolio Guide
-  - link: /blog/guides/content-collections-guide
-    icon: BookOpen
-    label: Content Guide
-  - link: /blog/guides/markdown-guide
-    icon: FileText
-    label: Markdown Guide
-  - link: https://github.com/lauroguedes/bloomfolio
-    icon: CodeXml
-    label: GitHub Repo
 showAboutSection: true
 showProjectsSection: true
-showBlogSection: true
+showBlogSection: false
 showWorkSection: true
 showEducationSection: true
-showHackathonsSection: true
+showHackathonsSection: false
 showContactSection: true
