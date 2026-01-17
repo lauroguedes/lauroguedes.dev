@@ -4,8 +4,8 @@ description: >-
   A production-ready marketplace for selling templates and digital products.
   Built with Astro, Keystatic CMS, and modern web technologies.
 image: '@assets/projects/templix-professional-marketplace-template/image.png'
-startDate: 2026-01-17
-endDate: 2026-01-17
+startDate: 2025-12-17
+endDate: 2026-01-05
 skills:
   - Astro
   - Keystatic CMS

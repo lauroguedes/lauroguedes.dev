@@ -2,7 +2,7 @@
 icon: MessageCircleCode
 linkUrl: https://x.com/leowg
 linkText: with a direct question on X (twitter)
-footerIcon: Pickaxe
+footerIcon: Heart
 footerText: Crafted by an Artisan
 footerLinkText: Lauro Guedes
 footerLinkUrl: https://lauroguedes.dev

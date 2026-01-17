@@ -50,7 +50,7 @@ const origin = Astro.url.origin;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
@@ -78,11 +78,7 @@ const origin = Astro.url.origin;
 
     <slot />
 
-    {
-      general.extraLinksEnabled && (
-        <FabFlower extraLinks={general.extraLinks} />
-      )
-    }
+    {general.extraLinksEnabled && <FabFlower extraLinks={general.extraLinks} />}
 
     <!-- Smooth Scroll -->
     <style is:global>
