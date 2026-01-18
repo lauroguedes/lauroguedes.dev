@@ -5,12 +5,23 @@ extraLinks:
       https://docs.google.com/document/d/1MB3sewehWDdBgIetYyZMu2s-A3zq0NxF4ruamyhES6I/edit?usp=sharing
     icon: FileText
     label: My CV
+    displayOn: both
+  - link: /projects
+    icon: BookOpen
+    label: My Projects
+    displayOn: dock
+  - link: https://linkedin.com/in/lauroguedes
+    icon: User
+    label: About Me
+    displayOn: dock
   - link: https://github.com/lauroguedes/lauroguedes.dev
     icon: CodeXml
     label: Clone this Repo
+    displayOn: both
   - link: /blog/guides/bloomfolio-complete-guide-building-your-portfolio
     icon: Flower2
     label: Bloomfolio Guide
+    displayOn: fab
 showAboutSection: true
 showProjectsSection: true
 showBlogSection: false
