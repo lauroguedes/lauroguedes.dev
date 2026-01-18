@@ -148,6 +148,7 @@ const general = defineCollection({
           "Link",
         ]),
         label: z.string(),
+        displayOn: z.enum(["both", "dock", "fab"]).optional().default("both"),
       })
     ),
     showAboutSection: z.boolean(),

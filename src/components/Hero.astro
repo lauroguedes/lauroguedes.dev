@@ -44,7 +44,7 @@ const { hero } = Astro.props;
       <div></div>
       <div></div>
     </div>
-    <div class="max-w-2xl">
+    <div class="max-w-2xl text-center lg:text-left">
       <h1 class="text-5xl font-bold mb-4">
         Hi, I'm {hero.name}
       </h1>
@@ -59,7 +59,7 @@ const { hero } = Astro.props;
       <p class="text-lg leading-relaxed mb-6">
         {hero.description}
       </p>
-      <div class="flex gap-4">
+      <div class="flex gap-4 justify-center lg:justify-start">
         {
           hero.socialLinks.map((link) => {
             const IconComponent = getIcon(link.icon as any);

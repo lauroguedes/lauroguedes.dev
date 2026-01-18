@@ -148,6 +148,16 @@ export default config({
               description: "Label shown on hover",
               validation: { isRequired: true },
             }),
+            displayOn: fields.select({
+              label: "Display On",
+              description: "Where this link should be displayed",
+              options: [
+                { label: "Both (Dock & Fab)", value: "both" },
+                { label: "Only Dock (Mobile)", value: "dock" },
+                { label: "Only Fab (Desktop)", value: "fab" },
+              ],
+              defaultValue: "both",
+            }),
           }),
           {
             label: "Extra Links",

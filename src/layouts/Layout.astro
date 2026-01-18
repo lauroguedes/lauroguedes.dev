@@ -3,6 +3,7 @@ import "../styles/global.css";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import ThemeSelector from "../components/ThemeSelector.astro";
 import FabFlower from "../components/FabFlower.astro";
+import Dock from "../components/Dock.astro";
 import { ClientRouter } from "astro:transitions";
 import { getEntry } from "astro:content";
 
@@ -78,7 +79,14 @@ const origin = Astro.url.origin;
 
     <slot />
 
-    {general.extraLinksEnabled && <FabFlower extraLinks={general.extraLinks} />}
+    {general.extraLinksEnabled && (
+      <>
+        {/* FabFlower for desktop - show 'both' and 'fab' items */}
+        <FabFlower extraLinks={general.extraLinks.filter((link) => link.displayOn !== "dock")} />
+        {/* Dock for mobile - show 'both' and 'dock' items */}
+        <Dock extraLinks={general.extraLinks.filter((link) => link.displayOn !== "fab")} />
+      </>
+    )}
 
     <!-- Smooth Scroll -->
     <style is:global>
