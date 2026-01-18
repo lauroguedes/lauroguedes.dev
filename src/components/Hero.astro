@@ -48,7 +48,9 @@ const { hero } = Astro.props;
       <h1 class="text-5xl font-bold mb-4">
         Hi, I'm {hero.name}
       </h1>
-      <p class="text-xl text-base-content/80 mb-2">{hero.title}</p>
+      <p class="skeleton skeleton-text text-xl text-base-content/80 mb-2">
+        {hero.title}
+      </p>
       {
         hero.location && (
           <p class="text-base-content/60 mb-4">{hero.location}</p>

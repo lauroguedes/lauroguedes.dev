@@ -6,6 +6,13 @@ startDate: 2021-11-01
 endDate: 2023-03-01
 logo: '@assets/work/yampi/logo.jpeg'
 link: https://www.yampi.com.br
+skills:
+  - PHP
+  - Laravel
+  - Vue JS
+  - Pest
+  - SCSS
+  - Docker
 ---
 - **Engineered core e-commerce features** for the online store, enhancing the end-user shopping experience and site functionality.
 - **Integrated Google Shopping** and other third-party systems to automate product synchronization and expand market reach.

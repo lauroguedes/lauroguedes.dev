@@ -42,6 +42,7 @@ const work = defineCollection({
       logo: image().optional(),
       link: z.string().url().optional(),
       location: z.string().optional(),
+      skills: z.array(z.string()).optional(),
     }),
 });
 

@@ -6,8 +6,6 @@ endDate: 2008-12-30
 logo: '@assets/education/ifmg-campus-sao-joao-evangelista/logo.png'
 link: https://www.ifmg.edu.br/portal
 ---
-• Maintenance and support of computers and networks
-
-• Development of desktop systems using the Delphi language
-
-• Creation of websites using HTML, CSS, JavaScript, and PHP
+- Maintenance and support of computers and networks
+- Development of desktop systems using the Delphi language
+- Creation of websites using HTML, CSS, JavaScript, and PHP

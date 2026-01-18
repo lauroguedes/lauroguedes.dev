@@ -292,6 +292,11 @@ export default config({
           description: "Job responsibilities and achievements",
           extension: "md",
         }),
+        skills: fields.array(fields.text({ label: "Skill" }), {
+          label: "Skills/Technologies",
+          itemLabel: (props) => props.value,
+          description: "Technologies and tools used in this role",
+        }),
       },
     }),
 

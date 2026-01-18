@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
 import { ExternalLink } from "@lucide/astro";
+import SkillBadge from "./SkillBadge.astro";
 
 interface Props {
   collection: "work" | "education";
@@ -208,6 +209,15 @@ const entriesWithContent = await Promise.all(
                   </div>
                 </div>
 
+                {/* Skills */}
+                {entry.data.skills && entry.data.skills.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {entry.data.skills.map((skill: string) => (
+                      <SkillBadge skill={skill} />
+                    ))}
+                  </div>
+                )}
+
                 {/* Modal Content */}
                 <div class="prose prose-sm max-w-none text-base-content/80">
                   <Content />
@@ -283,7 +293,7 @@ const entriesWithContent = await Promise.all(
                 </summary>
 
                 <div class="collapse-content">
-                  <div class="prose prose-sm max-w-none text-base-content/80">
+                  <div class="prose prose-sm max-w-none">
                     <Content />
                   </div>
                   {entry.data.link && (
