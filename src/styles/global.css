@@ -1,7 +1,7 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @plugin "daisyui" {
   themes:
-    /* light --default, */
     lemonade --default,
-    /* dark --prefersdark, */ sunset --prefersdark;
+    sunset --prefersdark;
 }

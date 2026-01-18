@@ -12,6 +12,7 @@ skills:
   - Stripe
   - Tailwind CSS
 demoLink: https://screencial.art
+featured: true
 ---
 ## Overview
 

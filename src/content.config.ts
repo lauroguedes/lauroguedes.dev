@@ -41,6 +41,7 @@ const work = defineCollection({
       endDate: z.coerce.date().optional(),
       logo: image().optional(),
       link: z.string().url().optional(),
+      location: z.string().optional(),
     }),
 });
 
@@ -77,6 +78,7 @@ const projects = defineCollection({
       skills: z.array(z.string()),
       demoLink: z.string().url().optional(),
       sourceLink: z.string().url().optional(),
+      featured: z.boolean().optional().default(false),
     }),
 });
 

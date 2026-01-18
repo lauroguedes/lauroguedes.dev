@@ -73,7 +73,7 @@ export default config({
             label: "Social Links",
             itemLabel: (props) => props.fields.label.value || "New Link",
             description: "Your social media and contact links",
-          }
+          },
         ),
       },
     }),
@@ -158,7 +158,7 @@ export default config({
             label: "Extra Links",
             itemLabel: (props) => props.fields.label.value || "New Link",
             description: "Links to display in the floating action button",
-          }
+          },
         ),
         showAboutSection: fields.checkbox({
           label: "Show About Section",
@@ -265,6 +265,10 @@ export default config({
           label: "Position",
           description: "Job title/role",
         }),
+        location: fields.text({
+          label: "Location",
+          description: "Country or city (e.g., 'Brazil', 'Remote')",
+        }),
         startDate: fields.date({
           label: "Start Date",
           validation: { isRequired: true },
@@ -341,6 +345,11 @@ export default config({
         contentField: "content",
       },
       schema: {
+        featured: fields.checkbox({
+          label: "Featured Project",
+          description: "Show this project on the homepage",
+          defaultValue: false,
+        }),
         title: fields.slug({
           name: { label: "Project Name" },
         }),
