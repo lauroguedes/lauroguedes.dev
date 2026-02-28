@@ -14,8 +14,8 @@ skills:
   - Taiwind CSS
   - Framer Motion
   - Web Crypto API
-demoLink: https://github.com/lauroguedes/passphrase-gen
-sourceLink: https://diceware.lauroguedes.dev/
+demoLink: https://diceware.lauroguedes.dev/
+sourceLink: https://github.com/lauroguedes/passphrase-gen
 ---
 ## Project Purpose
 
@@ -66,10 +66,6 @@ This project also helped deepen the understanding of how passphrase entropy work
 
 ## Credits
 
-This project was created by Lauro Guedes and is inspired by the Diceware methodology originally proposed by [Arnold G. Reinhold](https://theworld.com/~reinhold/diceware.html) and later popularized by the [Electronic Frontier Foundation (EFF)](https://www.eff.org/dice).
+This project was inspired by the Diceware methodology originally proposed by [Arnold G. Reinhold](https://theworld.com/~reinhold/diceware.html) and later popularized by the [Electronic Frontier Foundation (EFF)](https://www.eff.org/dice).
 
 The project is open source and available on GitHub under the MIT License.
-
----
-
-If you want, this can be turned into a README-style version or a portfolio-style version.
