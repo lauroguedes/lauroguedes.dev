@@ -1,11 +1,11 @@
 ---
 featured: true
-title: Wallai
+title: '# Wallai: AI-Powered Wallpaper Generator'
 description: >-
   Generate unique, AI-powered wallpapers for mobile and desktop using 🍌Nano
   Banana 2 and the Laravel AI SDK. Choose from 18 curated styles, customize your
   prompt, and download high-resolution images ready to use.
-image: '@assets/projects/wallai/image.png'
+image: '@assets/projects/wallai-ai-powered-wallpaper-generator/image.png'
 startDate: 2026-03-02
 endDate: 2026-03-08
 skills:
@@ -16,8 +16,6 @@ skills:
   - laravel ai sdk
 sourceLink: https://github.com/lauroguedes/wallai
 ---
-# Wallai: AI-Powered Wallpaper Generator
-
 WallAI is a web application that generates high-resolution wallpapers for mobile and desktop using AI image generation. Users pick from 21 curated visual styles (ranging from Cyberpunk Cityscape to Botanical Watercolor), write a short description or let the app auto-generate a prompt, then receive a wallpaper tailored to their device's aspect ratio. The result can be downloaded directly or viewed in a phone or monitor mockup before saving.
 
 ## Tech Stack
