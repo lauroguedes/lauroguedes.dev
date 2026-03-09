@@ -28,59 +28,7 @@ The core generation pipeline is split into three layers. First, the `PromptGener
 
 The entire generation cycle is dispatched as a queued `GenerateWallpaper` job. Two dedicated Horizon queues handle mobile and desktop workloads independently, allowing concurrent generation for both. Job state is tracked in Redis Cache, keyed by session and job ID, so the Livewire component can poll for results without blocking the UI.
 
-```
-sequenceDiagram
-    actor User
-    participant LC as Livewire Component
-    participant WS as WallpaperService
-    participant Q as Horizon Queue
-    participant PG as PromptGenerator Agent
-    participant IPA as ImagePromptAgent
-    participant AI as Laravel AI SDK
-    participant Gemini as Gemini API
-    participant Store as Public Storage
-    participant Cache as Redis Cache
-
-    User->>LC: Select style + enter description
-    LC->>WS: dispatchGeneration(sessionId, prompt, style, deviceType)
-    WS->>Cache: increment pending_jobs:{sessionId}
-    WS->>Q: GenerateWallpaper::dispatch() → wallpapers-{mobile|desktop}
-    WS-->>LC: jobId
-
-    loop Poll for result
-        LC->>Cache: getJobResult(jobId)
-        Cache-->>LC: status: pending
-    end
-
-    Q->>WS: handle(WallpaperService)
-    WS->>PG: prompt(message with style + device context)
-    PG->>Gemini: generate creative prompt (fallback: OpenAI)
-    Gemini-->>PG: refined prompt text
-    PG-->>WS: prompt string
-
-    WS->>IPA: prompt(refined prompt, style, deviceType)
-    IPA->>Gemini: structured output request (HasStructuredOutput schema)
-    Gemini-->>IPA: JSON (subject, scene, lighting, camera, negative_prompts)
-    IPA-->>WS: structured response
-
-    WS->>WS: flattenStructuredPrompt(structured)
-    WS->>AI: Image::of(engineeredPrompt).portrait|landscape().generate()
-    AI->>Gemini: image generation request
-    Gemini-->>AI: raw image bytes
-    AI-->>WS: ImageResponse
-
-    WS->>Store: Storage::disk(public).put(path, image)
-    Store-->>WS: stored path + url
-
-    WS->>Cache: put wallpaper_job:{jobId} → completed
-    WS->>Cache: append to wallpapers:{sessionId}:{deviceType}
-    WS->>Cache: decrement pending_jobs:{sessionId}
-
-    LC->>Cache: getJobResult(jobId)
-    Cache-->>LC: status: completed + wallpaper data
-    LC-->>User: gallery updated with new wallpaper
-
-```
+![Diagram](@assets/projects/wallai-ai-powered-wallpaper-generator/architecture.png)
 
 ## Best Practices Worth Noting
 
