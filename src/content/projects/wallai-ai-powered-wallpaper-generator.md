@@ -1,6 +1,6 @@
 ---
 featured: true
-title: '# Wallai: AI-Powered Wallpaper Generator'
+title: 'Wallai: AI-Powered Wallpaper Generator'
 description: >-
   Generate unique, AI-powered wallpapers for mobile and desktop using 🍌Nano
   Banana 2 and the Laravel AI SDK. Choose from 18 curated styles, customize your
@@ -28,7 +28,7 @@ The core generation pipeline is split into three layers. First, the `PromptGener
 
 The entire generation cycle is dispatched as a queued `GenerateWallpaper` job. Two dedicated Horizon queues handle mobile and desktop workloads independently, allowing concurrent generation for both. Job state is tracked in Redis Cache, keyed by session and job ID, so the Livewire component can poll for results without blocking the UI.
 
-![Diagram](@assets/projects/wallai-ai-powered-wallpaper-generator/architecture.png)
+![Diagram](@assets/projects/wallai-ai-powered-wallpaper-generator/diagram.png)
 
 ## Best Practices Worth Noting
 
