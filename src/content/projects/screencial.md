@@ -1,4 +1,5 @@
 ---
+featured: true
 title: Screencial
 description: >-
   A web application enabling users to generate personalized, shareable
@@ -12,7 +13,6 @@ skills:
   - Stripe
   - Tailwind CSS
 demoLink: https://screencial.art
-featured: true
 ---
 ## Overview
 
