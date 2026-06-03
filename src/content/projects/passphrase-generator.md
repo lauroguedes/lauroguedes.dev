@@ -1,5 +1,5 @@
 ---
-featured: true
+featured: false
 title: Passphrase Generator
 description: >-
   A cryptographically secure passphrase generator built with the EFF Dice-Roll
