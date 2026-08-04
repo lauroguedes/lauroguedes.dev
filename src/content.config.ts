@@ -1,4 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 
 // Hero singleton
@@ -63,6 +64,20 @@ const education = defineCollection({
     }),
 });
 
+// Project Categories collection
+const projectCategories = defineCollection({
+  loader: glob({
+    pattern: "**/*.{md,mdoc,yaml}",
+    base: "./src/content/projectCategories",
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    icon: z.string().optional(),
+    sortOrder: z.number().optional().default(0),
+  }),
+});
+
 // Projects collection
 const projects = defineCollection({
   loader: glob({
@@ -71,6 +86,7 @@ const projects = defineCollection({
   }),
   schema: ({ image }) =>
     z.object({
+      category: z.string().optional(),
       title: z.string(),
       description: z.string(),
       image: image(),
@@ -158,6 +174,10 @@ const general = defineCollection({
     showEducationSection: z.boolean(),
     showHackathonsSection: z.boolean(),
     showContactSection: z.boolean(),
+    projectsLayout: z
+      .enum(["grid", "tabs-horizontal", "tabs-vertical"])
+      .optional()
+      .default("grid"),
   }),
 });
 
@@ -179,6 +199,7 @@ export const collections = {
   hero,
   work,
   education,
+  projectCategories,
   projects,
   hackathons,
   blog,
