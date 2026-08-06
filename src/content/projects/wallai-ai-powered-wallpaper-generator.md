@@ -1,5 +1,6 @@
 ---
 featured: false
+category: ai-made
 title: 'Wallai: AI-Powered Wallpaper Generator'
 description: >-
   Generate unique, AI-powered wallpapers for mobile and desktop using 🍌Nano
