@@ -1,5 +1,6 @@
 ---
 featured: true
+category: saas
 title: Screencial
 description: >-
   A web application enabling users to generate personalized, shareable
