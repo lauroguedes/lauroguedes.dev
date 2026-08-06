@@ -1,4 +1,6 @@
 ---
+featured: false
+category: saas
 title: Code Tips Platform
 description: >-
   A centralized platform for storing and sharing code snippets, enabling
