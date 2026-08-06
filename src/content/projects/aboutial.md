@@ -1,4 +1,6 @@
 ---
+featured: false
+category: experiments
 title: Aboutial
 description: >-
   A modern, flexible personal portfolio/about page built with Nuxt 4, featuring
