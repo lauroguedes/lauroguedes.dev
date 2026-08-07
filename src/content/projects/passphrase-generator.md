@@ -1,6 +1,6 @@
 ---
 featured: false
-category: ai-made
+category: vibe-coding
 title: Passphrase Generator
 description: >-
   A cryptographically secure passphrase generator built with the EFF Dice-Roll
