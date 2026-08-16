@@ -1,6 +1,42 @@
 import { config, fields, collection, singleton } from "@keystatic/core";
 import { block } from "@keystatic/core/content-components";
 
+const contentSidebarPositionOptions = [
+  { label: "Right", value: "right" },
+  { label: "Left", value: "left" },
+] as const;
+
+const contentSidebarOverrideField = () =>
+  fields.conditional(
+    fields.checkbox({
+      label: "Override Global Content Sidebar",
+      description:
+        "Use settings for this page instead of the General Settings defaults",
+      defaultValue: false,
+    }),
+    {
+      false: fields.empty(),
+      true: fields.object(
+        {
+          show: fields.checkbox({
+            label: "Show Content Sidebar",
+            description: "Show H1/H2 links with collapsible H3 sublevels on this page",
+            defaultValue: true,
+          }),
+          position: fields.select({
+            label: "Content Sidebar Position",
+            options: contentSidebarPositionOptions,
+            defaultValue: "right",
+          }),
+        },
+        {
+          label: "Page Content Sidebar",
+          description: "These settings replace the global configuration",
+        }
+      ),
+    }
+  );
+
 export default config({
   storage: {
     kind: "cloud",
@@ -68,7 +104,7 @@ export default config({
             label: "Social Links",
             itemLabel: (props) => props.fields.label.value || "New Link",
             description: "Your social media and contact links",
-          },
+          }
         ),
       },
     }),
@@ -125,6 +161,18 @@ export default config({
             },
           ],
           defaultValue: "grid",
+        }),
+        showContentSidebar: fields.checkbox({
+          label: "Show Content Sidebar",
+          description:
+            "Show H1/H2 links with collapsible H3 sublevels on article and project pages",
+          defaultValue: true,
+        }),
+        contentSidebarPosition: fields.select({
+          label: "Content Sidebar Position",
+          description: "Choose the default side for the article content menu",
+          options: contentSidebarPositionOptions,
+          defaultValue: "right",
         }),
         enableThemeSelector: fields.checkbox({
           label: "Enable Theme Selector",
@@ -183,7 +231,7 @@ export default config({
             label: "Extra Links",
             itemLabel: (props) => props.fields.label.value || "New Link",
             description: "Links to display in the floating action button",
-          },
+          }
         ),
         showAboutSection: fields.checkbox({
           label: "Show About Section",
@@ -293,13 +341,11 @@ export default config({
         }),
         icon: fields.text({
           label: "Icon (Emoji)",
-          description:
-            'An emoji icon for this category (e.g., "🚀", "🤖", "🧪")',
+          description: 'An emoji icon for this category (e.g., "🚀", "🤖", "🧪")',
         }),
         sortOrder: fields.integer({
           label: "Sort Order",
-          description:
-            "Order in which this category appears on the projects page (lower = first)",
+          description: "Order in which this category appears on the projects page (lower = first)",
           defaultValue: 0,
         }),
       },
@@ -412,8 +458,7 @@ export default config({
         }),
         category: fields.relationship({
           label: "Category",
-          description:
-            "Assign a category to group this project on the projects page",
+          description: "Assign a category to group this project on the projects page",
           collection: "projectCategories",
         }),
         title: fields.slug({
@@ -452,6 +497,7 @@ export default config({
           label: "Source Code Link",
           description: "GitHub or repository URL (optional)",
         }),
+        contentSidebar: contentSidebarOverrideField(),
         content: fields.markdoc({
           label: "Full Description",
           description: "Detailed project information",
@@ -483,6 +529,12 @@ export default config({
         contentField: "content",
       },
       schema: {
+        published: fields.checkbox({
+          label: "Published",
+          description:
+            "List this post publicly and allow visitors to open its page. Uncheck to keep it as a draft.",
+          defaultValue: true,
+        }),
         title: fields.slug({
           name: { label: "Post Title" },
         }),
@@ -511,6 +563,7 @@ export default config({
           itemLabel: (props) => props.value,
           description: "Blog post tags",
         }),
+        contentSidebar: contentSidebarOverrideField(),
         content: fields.markdoc({
           label: "Content",
           description: "Blog post content",

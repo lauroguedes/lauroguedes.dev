@@ -22,8 +22,20 @@ interface Props {
 
 const { categoryGroups, uncategorizedProjects } = Astro.props;
 
-// Merge uncategorized into the tab list if present
+const allProjects = [
+  ...categoryGroups.flatMap((category) => category.projects),
+  ...uncategorizedProjects,
+].sort((a, b) => b.data.startDate.getTime() - a.data.startDate.getTime());
+
+// Show every project first, followed by the individual categories.
 const allTabs = [
+  {
+    slug: "_all",
+    title: "All",
+    description: "Browse every project in one place.",
+    icon: "✨",
+    projects: allProjects,
+  },
   ...categoryGroups,
   ...(uncategorizedProjects.length > 0
     ? [
@@ -40,34 +52,34 @@ const allTabs = [
 ---
 
 <div class="tabs tabs-border justify-center">
-  {
-    allTabs.map((tab, index) => (
-      <>
-        <input
-          type="radio"
-          name="projects_tabs_h"
-          class="tab"
-          aria-label={`${tab.icon ?? ""} ${tab.title}`.trim()}
-          checked={index === 0}
-        />
-        <div class="tab-content pt-6">
-          <h3 class="text-2xl font-bold mb-1">
-            {tab.icon && <span class="mr-2">{tab.icon}</span>}
-            {tab.title}
-          </h3>
-          {tab.description && (
-            <p class="text-base-content/60 mb-6">{tab.description}</p>
-          )}
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {tab.projects.map((project) => (
-              <ProjectCard
-                project={project}
-                categoryLabel={tab.slug !== "_other" ? tab.title : undefined}
-              />
-            ))}
-          </div>
+  {allTabs.map((tab, index) => (
+    <>
+      <input
+        type="radio"
+        name="projects_tabs_h"
+        class="tab"
+        aria-label={`${tab.icon ?? ""} ${tab.title}`.trim()}
+        checked={index === 0}
+      />
+      <div class="tab-content pt-6">
+        <h3 class="text-2xl font-bold mb-1">
+          {tab.icon && <span class="mr-2">{tab.icon}</span>}
+          {tab.title}
+        </h3>
+        {tab.description && (
+          <p class="text-base-content/60 mb-6">{tab.description}</p>
+        )}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {tab.projects.map((project) => (
+            <ProjectCard
+              project={project}
+              categoryLabel={
+                !["_all", "_other"].includes(tab.slug) ? tab.title : undefined
+              }
+            />
+          ))}
         </div>
-      </>
-    ))
-  }
+      </div>
+    </>
+  ))}
 </div>

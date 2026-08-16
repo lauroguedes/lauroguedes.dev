@@ -9,6 +9,10 @@ import { getEntry } from "astro:content";
 
 // Load general singleton
 const generalEntry = await getEntry("general", "index");
+if (!generalEntry) {
+  throw new Error('Missing required content entry: "general/index"');
+}
+
 const general = generalEntry.data;
 
 interface Props {
@@ -51,7 +55,7 @@ const origin = Astro.url.origin;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
@@ -79,14 +83,24 @@ const origin = Astro.url.origin;
 
     <slot />
 
-    {general.extraLinksEnabled && (
-      <>
-        {/* FabFlower for desktop - show 'both' and 'fab' items */}
-        <FabFlower extraLinks={general.extraLinks.filter((link) => link.displayOn !== "dock")} />
-        {/* Dock for mobile - show 'both' and 'dock' items */}
-        <Dock extraLinks={general.extraLinks.filter((link) => link.displayOn !== "fab")} />
-      </>
-    )}
+    {
+      general.extraLinksEnabled && (
+        <>
+          {/* FabFlower for desktop - show 'both' and 'fab' items */}
+          <FabFlower
+            extraLinks={general.extraLinks.filter(
+              (link) => link.displayOn !== "dock"
+            )}
+          />
+          {/* Dock for mobile - show 'both' and 'dock' items */}
+          <Dock
+            extraLinks={general.extraLinks.filter(
+              (link) => link.displayOn !== "fab"
+            )}
+          />
+        </>
+      )
+    }
 
     <!-- Smooth Scroll -->
     <style is:global>

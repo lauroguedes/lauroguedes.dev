@@ -1,4 +1,6 @@
 projectsLayout: tabs-vertical
+showContentSidebar: true
+contentSidebarPosition: right
 enableThemeSelector: false
 extraLinksEnabled: true
 extraLinks:
