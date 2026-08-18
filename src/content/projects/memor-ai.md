@@ -25,9 +25,10 @@ MemorAi is a mobile-first PWA I designed and built end to end: product, architec
 
 ## Stack
 
-- **Backend:** PHP 8.5, Laravel 13, Horizon for queues, Filament v5 for the internal admin panel, Pest for tests. **Frontend:** Inertia v3 with Vue 3, TypeScript, Tailwind CSS v4 and Wayfinder for typed routes, plus a separate Astro 7 marketing site that consumes the app only through a public HTTP contract.
+- **Backend:** PHP 8.5, Laravel 13, Horizon for queues, Filament v5 for the internal admin panel, Pest for tests.
+- **Frontend:** Inertia v3 with Vue 3, TypeScript, Tailwind CSS v4 and Wayfinder for typed routes, plus a separate Astro 7 marketing site that consumes the app only through a public HTTP contract.
 - **Auth and billing:** Fortify, Sanctum, Socialite (Google OAuth) and Cashier for Stripe.
-  **Infrastructure:** Cloudflare R2 for object storage, Redis-backed queues, ffmpeg/ffprobe for media processing, Nightwatch for production monitoring.
+- **Infrastructure:** Cloudflare R2 for object storage, Redis-backed queues, ffmpeg/ffprobe for media processing, Nightwatch for production monitoring.
 - **AI:** the Laravel AI SDK across multiple providers, covering text generation, structured output, tool calling, transcription, text to speech and image generation.
 
 ## Architecture highlights
