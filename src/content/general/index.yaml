@@ -27,7 +27,7 @@ extraLinks:
     displayOn: fab
 showAboutSection: true
 showProjectsSection: true
-showBlogSection: false
+showBlogSection: true
 showWorkSection: true
 showEducationSection: true
 showHackathonsSection: false
