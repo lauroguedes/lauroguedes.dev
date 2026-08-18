@@ -1,11 +1,12 @@
 ---
+published: false
 title: 'Bloomfolio Complete Guide: Building Your Portfolio'
 description: >-
   A comprehensive guide to customizing and deploying your Bloomfolio portfolio
-  template. Learn about Keystatic CMS, configuration, content management, and deployment.
+  template. Learn about Keystatic CMS, configuration, content management, and
+  deployment.
 image: >-
   @assets/blog/guides/bloomfolio-complete-guide-building-your-portfolio/image.png
-published: true
 publishDate: 2025-11-01
 updatedDate: 2026-08-14
 tags:
@@ -14,6 +15,8 @@ tags:
   - Astro
   - Portfolio
   - Keystatic
+contentSidebar:
+  discriminant: false
 ---
 ## Introduction
 
@@ -84,9 +87,11 @@ npm run dev
 Visit `http://localhost:4321` to see your portfolio.
 
 **Access Keystatic CMS:**
+
 ```
 http://localhost:4321/keystatic
 ```
+
 Use the visual editor to create and manage your content!
 
 ## Project Structure
@@ -218,10 +223,11 @@ Set any section to `false` to hide it. The Hero section is always visible.
 Organize your projects into custom categories via Keystatic CMS:
 
 1. Go to `/keystatic` → **Project Categories**
-2. Create categories with: **Name**, **Description**, **Emoji Icon**, **Sort Order**
-3. When editing a project, select its category from the dropdown
+1. Create categories with: **Name**, **Description**, **Emoji Icon**, **Sort Order**
+1. When editing a project, select its category from the dropdown
 
 Three default categories are included:
+
 - 🤖 **AI Made** — Projects built with AI assistance
 - 🚀 **Real Projects** — Production-ready applications
 - 🧪 **Experiments** — Exploratory projects and proof of concepts
@@ -268,6 +274,7 @@ Add clickable links inside the Hero section's **Title** and **Description** fiel
 ```
 
 **Example:**
+
 ```yaml
 title: "Astro Portfolio built with [link:https://daisyui.com]🌼 DaisyUI[/link]"
 ```
@@ -307,6 +314,7 @@ Bloomfolio offers two powerful ways to manage your content:
 Access the visual editor at `http://localhost:4321/keystatic` when your dev server is running.
 
 **Key Benefits:**
+
 - **Visual Interface**: Form-based content editing with live preview
 - **No File Management**: Keystatic handles file creation, naming, and organization
 - **Image Uploads**: Upload images directly through the interface
@@ -315,6 +323,7 @@ Access the visual editor at `http://localhost:4321/keystatic` when your dev serv
 - **Git-Based**: All changes are saved as files in your repository
 
 **Content Types Available:**
+
 - **Singletons**: Hero, About
 - **Collections**: Blog, Projects, Work, Education, Hackathons
 
@@ -325,6 +334,7 @@ Access the visual editor at `http://localhost:4321/keystatic` when your dev serv
 Edit markdown files directly in `src/content/` with your code editor.
 
 **Perfect for:**
+
 - Bulk content changes
 - Version control workflows
 - Advanced markdown editing
@@ -358,6 +368,7 @@ Blog posts support both `.md` (standard markdown) and `.mdoc` (Markdoc with medi
 **Location**: `src/content/blog/*.{md,mdoc}`
 
 **File Extensions:**
+
 - `.md` - Standard Markdown for regular blog posts
 - `.mdoc` - Markdoc with component support (required for Spotify, YouTube, Twitter embeds)
 
@@ -510,6 +521,7 @@ About section displaying bio with optional photo.
 Projects showcase section showing featured projects on the homepage.
 
 The full `/projects` page supports 3 layout styles (configurable in General Settings):
+
 - **Grid**: Category sections stacked with card grids (default)
 - **Horizontal Tabs**: DaisyUI tabs-border with an All tab and category tabs
 - **Sidebar**: DaisyUI menu with an All item and category items
