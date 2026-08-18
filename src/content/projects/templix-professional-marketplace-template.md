@@ -1,5 +1,5 @@
 ---
-featured: true
+featured: false
 category: templates-and-starter-kits
 title: Templix - Professional Marketplace Template
 description: >-
@@ -16,6 +16,8 @@ skills:
   - Typescript
 demoLink: https://templix.lwg.workers.dev/
 sourceLink: https://portal.astro.build/themes/templix-professional-marketplace-template/
+contentSidebar:
+  discriminant: false
 ---
 ## Features
 
