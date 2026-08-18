@@ -1,10 +1,11 @@
 ---
+published: false
 title: Markdown & Markdoc Guide
 description: >-
   Master Markdown syntax and Markdoc features in Bloomfolio. Learn how to create
-  rich, formatted content with embedded media components using Keystatic CMS or manual editing.
+  rich, formatted content with embedded media components using Keystatic CMS or
+  manual editing.
 image: '@assets/blog/guides/markdown-guide/image.png'
-published: true
 publishDate: 2025-11-03
 updatedDate: 2026-08-14
 tags:
@@ -12,6 +13,8 @@ tags:
   - Markdown
   - Markdoc
   - Writing
+contentSidebar:
+  discriminant: false
 ---
 ## What is Markdown?
 
@@ -22,6 +25,7 @@ Markdown is a lightweight markup language that lets you format text using simple
 Markdoc is an extension of Markdown used in Bloomfolio that allows you to use custom tags for rich media embeds (Spotify, YouTube, Twitter). Files using Markdoc components must have the `.mdoc` extension.
 
 **Quick Facts:**
+
 - Standard blog posts: `.md` extension
 - Blog posts with media embeds: `.mdoc` extension
 - Add components via [Keystatic CMS](/keystatic) (visual editor) or manual editing
@@ -248,16 +252,18 @@ Markdoc allows you to use custom tags within your markdown files for rich media 
 ### File Extension Requirements
 
 > **⚠️ Important:** Media components (Spotify, YouTube, Twitter) **only work in `.mdoc` files**, not `.md` files.
->
+> 
 > - Use `.md` for standard blog posts
-> - Use `.mdoc` for blog posts with media embeds
-> - Components are currently **only available in the blog collection**
+
+- Use `.mdoc` for blog posts with media embeds
+- Components are currently **only available in the blog collection**
 
 ### Content Management Options
 
 You can add Markdoc components in two ways:
 
 **Option 1: Keystatic CMS (Easier)**
+
 - Access the visual editor at `http://localhost:4321/keystatic`
 - Click the "+" button in the content editor
 - Select Spotify, YouTube, or Twitter component
@@ -265,6 +271,7 @@ You can add Markdoc components in two ways:
 - Files are automatically saved as `.mdoc`
 
 **Option 2: Manual Editing**
+
 - Create/rename file with `.mdoc` extension
 - Use `{% %}` tag syntax shown below
 
