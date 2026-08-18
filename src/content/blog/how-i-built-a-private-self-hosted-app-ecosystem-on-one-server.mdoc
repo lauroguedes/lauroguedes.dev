@@ -1,0 +1,160 @@
+---
+published: true
+title: How I built a private self-hosted app ecosystem on one server
+description: >+
+  A practical guide to building a secure, maintainable self-hosted app ecosystem
+  using Docker Compose, Caddy, Tailscale, backups, and an AI agent without the
+  complexity of Kubernetes.
+
+image: >-
+  @assets/blog/how-i-built-a-private-self-hosted-app-ecosystem-on-one-server/image.png
+publishDate: 2026-08-18
+updatedDate: 2026-08-18
+tags:
+  - self-host
+  - server
+  - tailscale
+  - hermes-agent
+  - ai-driven
+  - docker
+contentSidebar:
+  discriminant: false
+---
+I wanted a set of useful apps that I could control myself: photo storage, bookmarks, diagrams, file conversion, monitoring, travel plans, and an AI agent dashboard. I did not want each service exposed directly to the internet, and I did not want one giant Docker Compose file that would become difficult to maintain.
+
+The setup follows a simple pattern: each app has its own Docker Compose stack, while one central Caddy gateway provides private HTTPS access.
+
+## The architecture
+
+The server uses five main pieces:
+
+1. **Docker Compose** runs most applications.
+1. [**Caddy**](https://caddyserver.com/) is the only web gateway.
+1. [**Tailscale**](https://tailscale.com/) connects the server to trusted devices.
+1. **Cloudflare DNS** manages domains and TLS certificate validation.
+1. **systemd** runs host-level services and scheduled jobs.
+
+The hosted apps include [Immich](https://immich.app/), [Karakeep](https://karakeep.app/), [Beszel](https://beszel.dev/), [ConvertX](https://github.com/C4illin/ConvertX), [Homepage](https://gethomepage.dev/), [Excalidraw](https://excalidraw.com/), [draw.io](https://www.drawio.com/), [BentoPDF](https://www.bentopdf.com/), and [IT-Tools](https://it-tools.tech/). A small [Astro](https://astro.build/) site serves private travel plans as static files.
+
+The app list can change. The deployment pattern stays the same.
+
+## Give every app its own folder
+
+Everything lives under one predictable directory:
+
+```
+/opt/selfhosted/
+├── gateway/
+├── homepage/
+├── immich/
+├── karakeep/
+├── beszel/
+├── convertx/
+└── travel/
+
+```
+
+Each folder contains its own `compose.yaml`, configuration, and persistent data. Secrets are stored in protected files rather than copied into Compose files or source control.
+
+This separation lets me upgrade or restart Karakeep without touching Immich. It also makes backups easier because each app owns a known set of folders.
+
+## Put one private gateway in front
+
+Caddy is the only container that publishes HTTPS. Port 443 is bound to the server's Tailscale address, not every network interface.
+
+```
+services:
+  caddy:
+    ports:
+      - "${TAILSCALE_IP}:443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - photos
+      - bookmarks
+      - monitoring
+
+```
+
+Each app gets a small proxy network. Caddy joins that network and talks to the container by service name. The app itself does not publish a host port.
+
+A route stays simple:
+
+```
+photos.apps.example.com {
+    import private_tls
+    reverse_proxy immich-server:2283
+}
+
+```
+
+Cloudflare's DNS challenge lets Caddy obtain valid certificates without making the service public. Tailscale controls which devices can reach the private address.
+
+The result is a normal HTTPS URL for every app, without opening each application's port to the internet.
+
+## Separate web apps from their backends
+
+Apps with databases or helper services use two networks:
+
+- A proxy network connects the main web app to Caddy.
+- An internal backend network connects the app to its database, cache, search engine, browser, or local AI model.
+
+Immich has an application container, PostgreSQL, and Valkey. Only the application joins the proxy network. The database and cache stay internal.
+
+Karakeep follows the same approach. Its web app can reach private Chrome, Meilisearch, and Ollama containers. Ollama adds local tags to bookmarks, so that content does not need to leave the server for this feature.
+
+## Reuse one security baseline
+
+Every new Compose service starts with a small checklist:
+
+```
+restart: unless-stopped
+security_opt:
+  - no-new-privileges:true
+cap_drop:
+  - ALL
+mem_limit: 512m
+cpus: 1.0
+pids_limit: 256
+
+```
+
+Some applications need extra capabilities, but those are added individually. Images are pinned to a tested version and usually to a digest. Health checks are included when the app provides a reliable endpoint.
+
+Public registration is disabled where possible. Temporary tools get retention rules. ConvertX, for example, deletes old conversion files automatically instead of keeping uploads forever.
+
+Monitoring also needs care. Beszel does not talk directly to the Docker socket. A restricted socket proxy sits between the monitoring agent and Docker and allows only the read operations it needs.
+
+## Use systemd when Docker is not the best fit
+
+The Hermes dashboard and maintenance jobs run as user-level systemd services. systemd handles restarts, logs, permissions, and startup after reboot.
+
+Static content is simpler still. The travel site is built with Astro, and Caddy serves the generated files directly. There is no long-running Node.js process to maintain.
+
+## Back up data, not containers
+
+Containers and images can be recreated. User data cannot.
+
+Backups focus on persistent folders, databases, and application configuration. Immich backups are encrypted before being copied to Google Drive. Credentials stay outside the backup manifest, and restore steps are documented separately.
+
+A backup is useful only if it can restore a working application, so test the restore process before you need it.
+
+## Build your own setup in this order
+
+Start with one simple service:
+
+1. Install Docker, Compose, and Tailscale.
+1. Create a Caddy stack bound only to the Tailscale address.
+1. Configure private DNS names and TLS through a DNS challenge.
+1. Deploy one app with its own proxy network and no published port.
+1. Add protected secrets, health checks, resource limits, and pinned images.
+1. Test the private URL from a trusted device.
+1. Test the server's public IP and confirm that the app is unreachable there.
+1. Add monitoring and backups before storing important data.
+1. Repeat the same pattern for the next app.
+
+The setup is intentionally boring. Docker Compose keeps applications separate, Caddy gives them one controlled entrance, and Tailscale keeps that entrance private. Separate networks protect databases and helper services, while consistent limits and security settings reduce surprises.
+
+> The most interesting part of the process is that all of this organization runs within the [Hermes Agent](https://hermes-agent.nousresearch.com/), connected to a private Telegram bot. I configured a skill to orchestrate the environment, and when I need more than one self-hosted app, I just send a message to the agent like, "Publish the <name_app> self-hosted app." The agent then searches for the app, gives me the trade-offs and key points to consider before I approve, and then publishes it internally sob my Tailscale.
+
+You do not need Kubernetes to run a useful personal app ecosystem. A clear folder structure, private networking, one reverse proxy, tested backups, and a repeatable checklist are enough. A simple agent behind the scenes can also make the whole process easier to manage.
