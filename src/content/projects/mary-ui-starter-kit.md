@@ -17,7 +17,7 @@ skills:
   - DaisyUI
   - Tailwind CSS
   - Pest
-demoLink: https://github.com/lauroguedes/mary-ui-starter-kit
+demoLink: https://mary-ui-sk.on-forge.com
 sourceLink: https://github.com/lauroguedes/mary-ui-starter-kit
 ---
 ## Project Overview
