@@ -1,6 +1,6 @@
 ---
 featured: false
-category: vibe-coding
+category: templates-and-starter-kits
 title: 'Wallai: AI-Powered Wallpaper Generator'
 description: >-
   Generate unique, AI-powered wallpapers for mobile and desktop using 🍌Nano
@@ -15,38 +15,158 @@ skills:
   - alpine js
   - mary ui
   - laravel ai sdk
+  - self-host
 sourceLink: https://github.com/lauroguedes/wallai
+contentSidebar:
+  discriminant: false
 ---
-WallAI is a web application that generates high-resolution wallpapers for mobile and desktop using AI image generation. Users pick from 21 curated visual styles (ranging from Cyberpunk Cityscape to Botanical Watercolor), write a short description or let the app auto-generate a prompt, then receive a wallpaper tailored to their device's aspect ratio. The result can be downloaded directly or viewed in a phone or monitor mockup before saving.
+WallAI started as an experiment in AI-assisted wallpaper generation. The first version focused on the generation pipeline: turn a short idea into a detailed prompt, send it to an image model, and return a wallpaper sized for a phone or desktop.
 
-## Tech Stack
+Version 2.1.1 turns that experiment into a project designed to be self-hosted. The application now ships as a multi-architecture Docker image, includes an installation and management CLI, supports authenticated users or private browser workspaces, and can run behind its bundled HTTPS proxy or an existing reverse proxy.
 
-The project is built on [**Laravel 12**](https://laravel.com/) with [**Livewire 4**](https://livewire.laravel.com/) handling all frontend reactivity without a single line of custom JavaScript. UI components come from [**MaryUI**](https://mary-ui.com/) and [**DaisyUI**](https://daisyui.com/), styled with [**Tailwind CSS v4**](https://tailwindcss.com/). Image generation and prompt engineering run through the [**Laravel AI SDK**](https://github.com/laravel/ai) (`laravel/ai`), with [Google Gemini](https://ai.google.dev/) as the primary provider. Background job processing is managed by [**Laravel Horizon**](https://laravel.com/docs/horizon), backed by [Redis](https://redis.io/) queues. Tests are written with [**Pest 4**](https://pestphp.com/).
+Users can choose from 21 visual styles, write their own description or generate one automatically, preview the result in a phone or monitor mockup, and download the final image. AI providers and models are configured from the application, so each installation can use its own OpenAI, Google, or Ollama setup.
 
-## Architecture
+## What changed in v2.1.1
 
-The core generation pipeline is split into three layers. First, the `PromptGenerator` agent (a simple Laravel AI agent) takes the user's raw description and converts it into a more creative, well-formed image prompt. Second, the `ImagePromptAgent` receives that prompt along with the selected style and device type, then produces a rich structured JSON output using Laravel AI's `HasStructuredOutput` contract. This JSON defines everything from subject arrangement and scene environment to camera lens, aperture, ISO, lighting direction, and even a list of negative prompts. Third, `WallpaperService` flattens that structured object into a natural-language prompt string, passes it to `Image::of()` from the AI SDK, applies portrait or landscape orientation, and stores the result in public storage.
+The main goal of this release was to make installation predictable. A host only needs Docker Engine and Docker Compose. PHP, Composer, Node.js, and Redis are packaged inside the deployment instead of becoming prerequisites for the operator.
 
-The entire generation cycle is dispatched as a queued `GenerateWallpaper` job. Two dedicated Horizon queues handle mobile and desktop workloads independently, allowing concurrent generation for both. Job state is tracked in Redis Cache, keyed by session and job ID, so the Livewire component can poll for results without blocking the UI.
+The default installation now takes three commands:
 
-![Diagram](@assets/projects/wallai-ai-powered-wallpaper-generator/diagram.png)
+```bash
+git clone https://github.com/lauroguedes/wallai.git
+cd wallai
+./bin/wallai install
+```
 
-## Best Practices Worth Noting
+WallAI creates its secrets, starts the required services, runs database migrations, performs deployment checks, and exposes the application on `http://localhost:8080`. The port binds to the host loopback interface by default.
 
-**Structured output as prompt engineering** is one of the more interesting decisions here. Rather than sending a free-text prompt directly to the image model, `ImagePromptAgent` forces the LLM to first reason about the image in a rich schema covering subject, scene, lighting, camera, and quality settings. This schema is then serialized into a detailed natural-language prompt. The benefit is reproducibility and consistency: each style produces prompts with a predictable shape, and the negative prompt list is always enforced.
+Version 2.1.1 also added a zero-configuration local build mode:
 
-**Provider fallback** is declared at the class level via `#[Provider(['gemini', 'openai'])]` on the `PromptGenerator` agent, meaning OpenAI is used automatically if Gemini is unavailable. It is a clean way to handle provider reliability without infrastructure-level changes.
+```bash
+./bin/wallai install --local
+```
 
-**Session-scoped storage** avoids any authentication requirement. Wallpapers are stored per browser session with a one-day TTL in Cache, and files sit under `wallpapers/{sessionId}/` on the public disk. This keeps the app stateless from a user perspective while still giving each visitor a private gallery.
+This builds the current checkout with Docker and serves it at `http://wallai.localhost:8080`. The local environment is isolated from a normal installation through its own Compose project name, image tag, environment file, and volumes.
 
-**Custom Livewire exception hook** (`HandleExceptions`) intercepts any exception thrown inside a Livewire component, reports it to the application logger, and displays a toast notification instead of exposing Livewire's default error modal. It detects whether the component uses MaryUI's `Toast` trait before acting, making it opt-in by design.
+For server deployments, the installer accepts a domain and an immutable release version:
+
+```bash
+./bin/wallai install \
+  --domain wallai.example.com \
+  --version 2.1.1
+```
+
+That path enables the bundled Caddy proxy, configures production settings, and obtains a TLS certificate. The installer also supports custom ports, bind addresses, project names, images, and environment files for deployments that already have their own infrastructure conventions.
+
+The release publishes container images for Linux `amd64` and `arm64` through GitHub Container Registry. It also improves frontend asset reliability, adds persistent light and dark themes, updates browser branding, and includes adaptive logo, favicon, and PWA assets.
+
+## Tech stack
+
+WallAI 2.1.1 is built with [Laravel 13](https://laravel.com/), [Livewire 4](https://livewire.laravel.com/), and the [Laravel AI SDK](https://github.com/laravel/ai). The published runtime uses PHP 8.5 and [FrankenPHP](https://frankenphp.dev/). [MaryUI](https://mary-ui.com/) provides the component layer, with [Tailwind CSS 4](https://tailwindcss.com/) and [DaisyUI 5](https://daisyui.com/) handling the visual system.
+
+The frontend build runs on Node.js 26 and Vite 8, but neither is required on a self-hosting machine because the compiled assets are already included in the image.
+
+[Laravel Horizon](https://laravel.com/docs/horizon) manages queued wallpaper generation and notification jobs. Redis stores queues, sessions, cache data, Horizon metadata, and scheduler locks. SQLite is the default database, with PostgreSQL, MySQL, and MariaDB available for installations that need an external database. The test suite uses [Pest 5](https://pestphp.com/).
+
+## Runtime architecture
+
+The same immutable WallAI image runs in four roles:
+
+{% table %}
+- Role
+- Responsibility
+---
+- `init`
+- Runs migrations and deployment diagnostics before the application starts
+---
+- `web`
+- Serves Laravel through FrankenPHP on port 8080
+---
+- `horizon`
+- Processes wallpaper generation and invitation queues
+---
+- `scheduler`
+- Runs Laravel scheduled tasks and records a health heartbeat
+{% /table %}
+
+Redis runs as a separate authenticated service on the private Docker network. It has no published host port. An optional Caddy service handles automatic HTTPS when the installer receives a domain.
+
+Startup order is intentional. Redis must become healthy before `init` runs. The web server, Horizon, and scheduler start only after migrations and deployment checks complete successfully. This prevents requests or queued jobs from reaching an outdated database schema.
+
+The deployment persists three categories of data: the application database, generated wallpapers, and Redis state. SQLite uses write-ahead logging with a busy timeout to reduce lock contention between web requests and queue workers.
+
+## AI generation pipeline
+
+The generation flow still uses the two-stage agent architecture from the original version.
+
+`PromptGenerator` expands the user's short description into a more useful creative direction. `ImagePromptAgent` then combines that result with the selected visual style and device type. It returns structured data describing the subject, environment, composition, lighting, camera settings, quality targets, and negative prompts.
+
+`WallpaperService` converts that structure into the final natural-language prompt, selects portrait or landscape orientation, calls the configured image provider through the Laravel AI SDK, and stores the generated file. A queued `GenerateWallpaper` job runs the expensive work outside the Livewire request cycle.
+
+Mobile and desktop generation use separate Horizon queues. Invitation emails use another supervisor, so a slow image request cannot block account notifications.
+
+## Authentication and workspaces
+
+The first-run setup offers two application modes.
+
+Authenticated mode creates the first administrator and enables multi-user workspaces. New users join through administrator invitations, and each user receives an isolated workspace for settings and generated wallpapers. The Horizon dashboard is available only to active administrators.
+
+Browser-session mode removes the login screen and isolates data through an encrypted browser session. It works well for a private personal installation where account management would add unnecessary friction.
+
+The selected mode remains active until the operator explicitly resets the installation. This keeps the authorization model stable after users and provider credentials have been created.
+
+## Provider configuration
+
+OpenAI and Google can handle text and image generation. Ollama is available for local text models, while image generation continues through a supported image provider.
+
+Provider keys are entered through the WallAI settings interface and encrypted in the database. Each authenticated user can maintain their own provider configuration. Environment variables remain available as deployment-level fallbacks.
+
+The application key is part of the encryption boundary. A backup without the original `APP_KEY` cannot decrypt stored provider credentials, so WallAI includes it in protected backup archives alongside the database and generated files.
+
+## Security and operations
+
+The containers use a read-only root filesystem and `no-new-privileges`. Application processes drop to the unprivileged `www-data` user before starting Laravel, Horizon, the scheduler, or FrankenPHP. Only explicit temporary and persistent paths remain writable.
+
+The direct web port binds to `127.0.0.1` by default, Redis stays inside the Docker network, and production deployments can restrict trusted hosts and proxies. Secure session cookies and disabled debug output are enforced when the installer configures a public HTTPS domain.
+
+WallAI includes a small management CLI for routine operations:
+
+```bash
+./bin/wallai status
+./bin/wallai logs
+./bin/wallai doctor
+./bin/wallai backup
+./bin/wallai update
+```
+
+The backup command temporarily enables maintenance mode, pauses workers, and creates a checksum-protected archive containing the SQLite database, generated wallpapers, active environment file, application key, and Redis password. The archive can be written directly to an off-server destination.
+
+## Best practices worth noting
+
+The most useful architectural decision in this release is using one image for every application role. Web, queue, scheduler, and initialization processes share the same code and dependency versions. Only their startup commands differ. This removes an entire class of deployment mismatches.
+
+The one-shot initialization container is another practical choice. Migrations and deployment checks become startup dependencies rather than instructions an operator might forget to run. Docker Compose health conditions make the sequence explicit.
+
+Versioned images matter for self-hosting. WallAI publishes numbered tags and lets operators pin a release instead of silently following `latest`. The release workflow audits Composer and npm dependencies, scans the image, creates a software bill of materials, and publishes build provenance.
+
+The project also keeps the simple SQLite default. A single-user or small multi-user installation does not need a separate database server, while installations with different requirements can switch to PostgreSQL or MySQL through configuration.
 
 ## Challenges
 
-The main technical challenge was coordinating the two-step AI pipeline within a queue context. The `ImagePromptAgent` uses structured output with a detailed JSON schema: getting the model to consistently honour all schema constraints (especially `aspect_ratio` and negative prompts) required careful instruction engineering and explicit schema descriptions on every field.
+Packaging a Laravel application for self-hosting required more work than putting the web process in a container. Migrations, queues, scheduled tasks, persistent files, encrypted credentials, health checks, upgrades, and backups all need predictable behavior across fresh installations and existing data.
 
-Concurrency was another consideration. Multiple jobs writing to the same session's wallpaper list in Cache could cause race conditions, which is handled with a Cache lock (`Cache::lock(...)->block(...)`) inside the job's completion handler. It is a lightweight but reliable approach given the Redis backend.
+Filesystem permissions were particularly important because the runtime uses a read-only root filesystem. The entrypoint needs enough access to read operator-owned secret mounts, create the required writable paths, and then drop privileges before the application starts.
+
+Supporting both authenticated and browser-session modes also changed assumptions from the first version. Provider settings, wallpapers, Horizon access, and invitations now depend on the selected workspace model instead of a single global browser session.
+
+The local and server installation flows had to remain separate without becoming two different products. Local mode builds the current checkout with debugging enabled, while server mode pulls a published image and enforces production settings. Both are managed through the same `bin/wallai` command.
 
 ## Conclusion
 
-WallAI is a focused, well-structured example of integrating a modern AI generation pipeline into a Laravel application. The two-agent architecture (one for creative prompt expansion, one for structured prompt engineering) produces noticeably better image results than a naive single-prompt approach. Combined with Horizon-managed queues, session-based storage, and reactive Livewire components, it shows how much can be built with the Laravel ecosystem without reaching for a separate frontend framework.
+WallAI 2.1.1 is no longer only a demonstration of AI image generation with Laravel. It is a self-hosted application with a repeatable installation process, explicit persistence, health checks, upgrades, backups, and a clearer security boundary.
+
+The AI pipeline remains the part users interact with, but the Docker and operational work is what makes the project practical to run outside a development machine.
+
+- [View the source code](https://github.com/lauroguedes/wallai)
+- [Read the v2.1.1 release notes](https://github.com/lauroguedes/wallai/releases/tag/v2.1.1)
+- [Open the self-hosting documentation](https://github.com/lauroguedes/wallai/tree/main/docs/self-hosting)
