@@ -16,6 +16,7 @@ skills:
   - mary ui
   - laravel ai sdk
   - self-host
+  - docker
 sourceLink: https://github.com/lauroguedes/wallai
 contentSidebar:
   discriminant: false
