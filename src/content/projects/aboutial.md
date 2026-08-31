@@ -16,6 +16,8 @@ skills:
   - Tailwind CSS
 demoLink: https://aboutial.vercel.app/
 sourceLink: https://github.com/lauroguedes/aboutial
+contentSidebar:
+  discriminant: false
 ---
 ## **Features**
 
