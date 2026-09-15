@@ -1,0 +1,121 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Privacy Policy | Lauro Guedes"
+  description="Privacy policy for lauroguedes.dev and its personal Hermes Agent Google OAuth integration."
+>
+  <main class="mx-auto max-w-3xl px-6 pb-24 pt-28 md:pt-36">
+    <article class="prose prose-lg max-w-none">
+      <p><a href="/" class="btn btn-ghost btn-sm no-underline">← Home</a></p>
+
+      <h1>Privacy Policy</h1>
+      <p class="text-base-content/60"><strong>Last updated:</strong> September 15, 2026</p>
+
+      <p>
+        This policy explains how lauroguedes.dev and the personal Google OAuth
+        integration operated by Lauro Guedes through Hermes Agent access, use,
+        store, and share information. The integration is currently intended for
+        the account owner's personal workflows, not as a public software-as-a-service product.
+      </p>
+
+      <h2>Information processed</h2>
+      <p>The information processed depends on the Google services and permissions authorized by the account owner. It may include:</p>
+      <ul>
+        <li>Gmail message content, headers, metadata, labels, and message state;</li>
+        <li>Google Calendar calendars and event information;</li>
+        <li>Google Drive file metadata and file content;</li>
+        <li>Google Sheets and Google Docs content when those services are explicitly enabled;</li>
+        <li>OAuth account identifiers, access tokens, and refresh tokens needed to maintain the authorized connection.</li>
+      </ul>
+      <p>The integration does not request or store the user's Google password.</p>
+
+      <h2>How information is used</h2>
+      <p>Google user data is used only to perform workflows requested or configured by the authorized account owner, such as:</p>
+      <ul>
+        <li>searching, reading, summarizing, drafting, sending, or organizing email;</li>
+        <li>reading or managing calendar events;</li>
+        <li>searching, reading, creating, or organizing files and documents;</li>
+        <li>running explicitly configured personal automations and scheduled digests;</li>
+        <li>diagnosing authentication and integration failures.</li>
+      </ul>
+      <p>Google user data is not sold, used for advertising, or used to build advertising profiles.</p>
+
+      <h2>Service providers and AI processing</h2>
+      <p>
+        Hermes Agent runs on private infrastructure controlled by the account owner.
+        When a workflow asks an external AI model to analyze Google data, the minimum
+        relevant content may be transmitted to the configured model provider solely
+        to complete that request. Local or script-only workflows may process data
+        without sending it to an AI provider. Google and infrastructure providers
+        process information as necessary to provide their respective services.
+      </p>
+      <p>
+        Google user data is not transferred to unrelated third parties except when
+        required by law, needed to protect the service or account, or explicitly
+        directed by the authorized user.
+      </p>
+
+      <h2>Storage and retention</h2>
+      <p>
+        OAuth credentials and tokens are stored in owner-restricted files on the
+        private Hermes server and are not committed to public source repositories.
+        Google content is normally processed only for the requested operation.
+        Some explicitly configured workflows may retain source or derived files for
+        a documented period, after which their task-specific cleanup policy applies.
+      </p>
+      <p>
+        Tokens are retained until they expire, are replaced, are revoked, or are no
+        longer required. Diagnostic logs are designed to exclude passwords, tokens,
+        authorization codes, and other secrets.
+      </p>
+
+      <h2>Security</h2>
+      <p>
+        Reasonable technical measures are used to restrict access, including
+        owner-only credential permissions, private service access, least-privilege
+        OAuth scopes where practical, and explicit approval requirements for
+        sensitive actions. No system can guarantee absolute security.
+      </p>
+
+      <h2>Google API Services User Data Policy</h2>
+      <p>
+        The use and transfer of information received from Google APIs adheres to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+        including its Limited Use requirements.
+      </p>
+
+      <h2>Your choices and revocation</h2>
+      <p>The authorized account owner can:</p>
+      <ul>
+        <li>decline requested OAuth permissions;</li>
+        <li>limit the enabled services and scopes;</li>
+        <li>ask for stored workflow data to be reviewed or removed, subject to legal and operational requirements;</li>
+        <li>revoke the integration from the Google Account's third-party connections page.</li>
+      </ul>
+      <p>
+        Revoking access prevents future Google API requests but does not automatically
+        remove information previously retained by an explicitly configured workflow.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        This policy may be updated when the integration, scopes, providers, or
+        retention practices change. The latest revision date appears at the top of this page.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy or the integration can be sent to
+        <a href="mailto:me@lauroguedes.dev">me@lauroguedes.dev</a>.
+      </p>
+
+      <hr />
+      <p>
+        Read the related <a href="/terms">Terms of Service</a> or the
+        <a href="/blog/how-to-connect-hermes-agent-to-google-oauth-in-production">Google OAuth production setup guide</a>.
+      </p>
+    </article>
+  </main>
+</Layout>

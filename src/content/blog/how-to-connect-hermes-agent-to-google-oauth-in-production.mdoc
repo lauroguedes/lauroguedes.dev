@@ -1,0 +1,171 @@
+---
+published: true
+title: How to connect Hermes Agent to Google OAuth in production
+description: >-
+  A practical guide to connecting Hermes Agent to Gmail, Calendar, and Drive with a production Google OAuth app, durable refresh tokens, and the minimum permissions your workflow needs.
+image: >-
+  @assets/blog/how-to-connect-hermes-agent-to-google-oauth-in-production/image.png
+publishDate: 2026-09-15
+updatedDate: 2026-09-15
+tags:
+  - hermes-agent
+  - google-oauth
+  - gmail-api
+  - automation
+  - security
+contentSidebar:
+  discriminant: false
+---
+Google OAuth integrations often work perfectly for a week and then fail with `invalid_grant: Token has been expired or revoked`. A common cause is an external OAuth app left in **Testing**: when it requests Gmail, Calendar, Drive, or other non-basic scopes, Google normally expires its refresh tokens after seven days.
+
+This guide shows how to connect [Hermes Agent](https://hermes-agent.nousresearch.com/) to Google through an OAuth app configured for production. The goal is durable access for personal automations without publishing client secrets, granting unnecessary permissions, or repeatedly signing in.
+
+> This is an independent implementation guide, not an official Google or Nous Research product. Always compare it with the current [Google OAuth documentation](https://developers.google.com/identity/protocols/oauth2) and [Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/).
+
+## What the integration does
+
+Hermes can use an OAuth grant to work with Google services on behalf of the account that approved it. Depending on the services and scopes you select, that can include:
+
+- searching and reading Gmail messages;
+- preparing, sending, or organizing email;
+- reading and managing Calendar events;
+- searching, reading, and uploading Drive files;
+- reading or updating Sheets and Docs.
+
+OAuth keeps the Google password outside Hermes. Google issues a short-lived access token and, when offline access is approved, a refresh token that can obtain new access tokens automatically.
+
+## 1. Create a dedicated Google Cloud project
+
+Open the [Google Cloud project selector](https://console.cloud.google.com/projectselector2/home/dashboard) and create a project dedicated to this integration. Keeping it separate makes its permissions, credentials, and audit history easier to understand.
+
+Enable only the APIs your workflow needs in the [API Library](https://console.cloud.google.com/apis/library). For example:
+
+- Gmail API for email workflows;
+- Google Calendar API for calendar workflows;
+- Google Drive API for file workflows;
+- Google Sheets API and Google Docs API only when required.
+
+## 2. Create the public pages first
+
+An external production OAuth app needs an application homepage and privacy-policy URL on a domain you control. A terms page is also useful, although Google treats it as optional in many configurations.
+
+The homepage must identify the integration, explain what it does, and link to the privacy policy. This article is a working example. Its related legal pages are:
+
+- [Privacy Policy](/privacy), which explains how this site's personal Hermes integration accesses, processes, stores, and shares Google user data;
+- [Terms of Service](/terms), which provides an example of the terms attached to a personal integration.
+
+Do not submit placeholder pages or copy a policy that does not match your real data handling. Update the pages whenever your scopes, storage, providers, or retention rules change.
+
+## 3. Configure Google Auth Platform branding
+
+Open **Google Auth Platform → Branding** and fill in the app name, support email, and developer contact email. Under **App domains**, use HTTPS URLs hosted on your verified domain.
+
+For this implementation, the values are:
+
+```text
+Application home page:
+https://lauroguedes.dev/blog/how-to-connect-hermes-agent-to-google-oauth-in-production
+
+Application privacy policy:
+https://lauroguedes.dev/privacy
+
+Application terms of service:
+https://lauroguedes.dev/terms
+
+Authorized domain:
+lauroguedes.dev
+```
+
+Authorized domains contain only the registrable domain. Do not include `https://`, a path, a wildcard, or `localhost`.
+
+Verify ownership of the domain in [Google Search Console](https://search.google.com/search-console/about) using a Google account that is also an owner or editor of the Cloud project.
+
+## 4. Choose the smallest practical scopes
+
+In **Google Auth Platform → Data Access**, add only the scopes required by the features you will use. A newsletter reader may need only read access to Gmail. It does not need Calendar or Drive permissions.
+
+Google classifies many Gmail scopes as sensitive or restricted. Broader public distribution can require brand, scope, and security verification. A genuinely personal app with a small number of users may qualify for Google's personal-use verification exception, but it can still show an unverified-app warning and remain subject to user limits and policy requirements.
+
+Production status is not permission to over-request data. Least privilege remains the safest default.
+
+## 5. Create a Desktop OAuth client
+
+Open **Google Auth Platform → Clients**, create an OAuth client, and choose **Desktop app**. Download the client JSON once and keep it outside your repository.
+
+Never commit the client JSON, access tokens, refresh tokens, authorization codes, or callback URLs. Store credential files with owner-only permissions.
+
+## 6. Move the audience to production
+
+In **Google Auth Platform → Audience**:
+
+1. Choose **External** when you are using a personal Google account rather than an internal Workspace organization.
+2. While configuring the app, add your account as a test user if required.
+3. When the branding, domains, and scopes are correct, click **Publish app** and confirm that the publishing status is **In production**.
+
+This removes the automatic seven-day refresh-token lifetime associated with Testing for non-basic scopes. It does not make refresh tokens permanent: users can revoke access, password changes can affect tokens with Gmail scopes, six months of inactivity can invalidate a token, and issuing too many tokens for the same user and client can invalidate older ones.
+
+## 7. Authorize Hermes Agent
+
+Hermes includes a browser-based setup flow. Replace the example path with the client JSON downloaded from Google Cloud:
+
+```bash
+python ~/.hermes/skills/productivity/google-workspace/scripts/setup.py \
+  --client-secret ~/Downloads/client_secret.json
+```
+
+Generate an authorization URL with the narrowest service set you need:
+
+```bash
+# Gmail only
+python ~/.hermes/skills/productivity/google-workspace/scripts/setup.py \
+  --auth-url --services email
+
+# Gmail and Calendar
+python ~/.hermes/skills/productivity/google-workspace/scripts/setup.py \
+  --auth-url --services email,calendar
+
+# All supported Workspace services
+python ~/.hermes/skills/productivity/google-workspace/scripts/setup.py \
+  --auth-url --services all
+```
+
+Open the generated URL, review every requested permission, and approve it. The browser may redirect to a local address that does not load. That is expected on a remote or headless Hermes server. Copy the complete redirected URL from the address bar and exchange it on the server:
+
+```bash
+python ~/.hermes/skills/productivity/google-workspace/scripts/setup.py \
+  --auth-code "COMPLETE_REDIRECT_URL"
+```
+
+Do not paste the callback URL into logs, tickets, public chats, or documentation. It contains a short-lived authorization code.
+
+Finally, verify the connection:
+
+```bash
+python ~/.hermes/skills/productivity/google-workspace/scripts/setup.py --check
+```
+
+The expected result is `AUTHENTICATED`.
+
+## Production checklist
+
+- The Google Cloud project is dedicated to the integration.
+- Only required APIs and OAuth scopes are enabled.
+- The homepage accurately describes the integration.
+- The homepage links to the same privacy policy configured in Google Cloud.
+- The authorized domain is verified in Google Search Console.
+- The OAuth client type is Desktop app.
+- The audience status is In production.
+- Credential and token files are excluded from Git and restricted to their owner.
+- The integration handles `invalid_grant` safely and requests a new authorization instead of silently failing.
+
+A production OAuth configuration solves the recurring seven-day Testing expiry, but the more important result is a setup that is understandable: one project, explicit scopes, public data-handling documentation, protected credentials, and a repeatable reauthorization path.
+
+## Sources
+
+1. [Using OAuth 2.0 to access Google APIs](https://developers.google.com/identity/protocols/oauth2)
+2. [OAuth app state overview](https://developers.google.com/identity/protocols/oauth2/production-readiness/overview)
+3. [Submit for brand verification](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification)
+4. [Manage OAuth app branding](https://support.google.com/cloud/answer/15549049)
+5. [When OAuth verification is not needed](https://support.google.com/cloud/answer/13464323)
+6. [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy)
+7. [Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/)
