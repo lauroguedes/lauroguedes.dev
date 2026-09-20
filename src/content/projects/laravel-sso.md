@@ -1,10 +1,11 @@
 ---
-featured: false
+featured: true
 category: templates-and-starter-kits
 title: Laravel SSO Starter Kit
 description: >-
   A self-hosted OpenID Connect provider built as a readable Laravel application,
-  with OAuth 2.0, per-application roles, user management, sessions, and audit tools.
+  with OAuth 2.0, per-application roles, user management, sessions, and audit
+  tools.
 image: '@assets/projects/laravel-sso/image.png'
 startDate: 2026-09-08
 endDate: 2026-09-19
