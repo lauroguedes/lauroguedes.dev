@@ -1,5 +1,5 @@
 ---
-featured: false
+featured: true
 category: templates-and-starter-kits
 title: Mobi Launch Premium Astro Template
 description: >-
