@@ -3,6 +3,6 @@ title: About Me
 photo: '@assets/about/photo.png'
 link: https://linkedin.com/in/lauroguedes
 ---
-My toolkit revolves around the **Laravel and Vue JS** ecosystem. I enjoy crafting everything from robust APIs and full-stack applications to open-source tools like the [Mary UI Laravel Starter Kit](https://github.com/lauroguedes/mary-ui-starter-kit) and [Bloomfolio](https://github.com/lauroguedes/bloomfolio), an Astro portfolio template that's been forked dozens of times.
+I enjoy turning ideas into practical products and publishing reusable open-source work, including [Laravel SSO](https://sso.lauroguedes.dev), [Landpack](https://github.com/lauroguedes/landpack), and the [Mary UI Laravel Starter Kit](https://github.com/lauroguedes/mary-ui-starter-kit).
 
-When I'm not coding, I'm probably exploring AI art, traveling, or listening to 🎸 heavy music way too loud.
+I'm also an indie hacking enthusiast, interested in validating ideas, building SaaS products, experimenting with AI and developer tools, and taking projects from the first commit to a real launch. Away from the keyboard, I'm usually traveling or listening to heavy music louder than necessary 🤘🏼.
