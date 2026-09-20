@@ -1,10 +1,11 @@
 ---
-featured: false
+featured: true
 category: templates-and-starter-kits
 title: Landpack Astro Template
 description: >-
   An open-source Astro landing page template for technical projects, with typed
-  content, light and dark themes, developer documentation, and AI-assisted customization.
+  content, light and dark themes, developer documentation, and AI-assisted
+  customization.
 image: '@assets/projects/landpack-astro-template/image.png'
 startDate: 2026-09-19
 endDate: 2026-09-19
